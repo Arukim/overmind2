@@ -1,22 +1,18 @@
 package main
 
 import (
+	"github.com/Arukim/overmind2/models"
 	"github.com/ant0ine/go-json-rest/rest"
 	"net/http"
 	"sync"
 )
 
-type Node struct {
-	Address string
-	Status  string
-}
-
-var nodes = make(map[string]*Node)
+var nodes = make(map[string]*models.Node)
 var lock = sync.RWMutex{}
 
 func GetNodes(w rest.ResponseWriter, r *rest.Request) {
 	lock.RLock()
-	res := make([]Node, len(nodes))
+	res := make([]models.Node, len(nodes))
 	i := 0
 	for _, node := range nodes {
 		res[i] = *node
@@ -27,7 +23,7 @@ func GetNodes(w rest.ResponseWriter, r *rest.Request) {
 }
 
 func PutNode(w rest.ResponseWriter, r *rest.Request) {
-	node := Node{}
+	node := models.Node{}
 	err := r.DecodeJsonPayload(&node)
 	if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
