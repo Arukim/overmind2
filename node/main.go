@@ -2,8 +2,11 @@ package main
 
 import (
 	"net/http"
+	"os"
 )
 
 func main() {
-	http.ListenAndServe(":8001", MakeHandler())
+	adr := ":" + os.Args[1]
+	Init(adr)
+	http.ListenAndServe(adr, MakeHandler())
 }
