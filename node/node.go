@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Arukim/overmind2/models"
+	"github.com/arukim/overmind2/models"
 	"github.com/bndr/gopencils"
 	"time"
 )

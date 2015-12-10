@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Arukim/overmind2/models"
 	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/arukim/overmind2/models"
 	"net/http"
 	"sync"
 )
