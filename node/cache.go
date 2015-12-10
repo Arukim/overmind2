@@ -4,14 +4,20 @@ import (
 	"github.com/ant0ine/go-json-rest/rest"
 	"net/http"
 	"sync"
+	"time"
 )
 
-var cache = make(map[string]*string)
+var cache = make(map[string]*CacheItem)
 var lock = sync.RWMutex{}
 
 type CacheWriteRequest struct {
 	Value     string
-	DurationS string
+	DurationS int
+}
+
+type CacheItem struct {
+	Value   *string
+	Expires time.Time
 }
 
 func PutCache(w rest.ResponseWriter, r *rest.Request) {
@@ -26,8 +32,12 @@ func PutCache(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, "key required", 400)
 	}
 
+	item := CacheItem{
+		Value:   &data.Value,
+		Expires: time.Now().Add(time.Duration(data.DurationS) * time.Second),
+	}
 	lock.Lock()
-	cache[key] = &data.Value
+	cache[key] = &item
 	lock.Unlock()
 
 	w.WriteHeader(http.StatusNoContent)
@@ -40,5 +50,8 @@ func GetCache(w rest.ResponseWriter, r *rest.Request) {
 	res := cache[key]
 	lock.RUnlock()
 
+	if res != nil && res.Expires.Before(time.Now()) {
+		res = nil
+	}
 	w.WriteJson(&res)
 }
