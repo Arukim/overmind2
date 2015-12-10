@@ -11,6 +11,8 @@ func MakeHandler() http.Handler {
 
 	router, _ := rest.MakeRouter(
 		rest.Get("/status", GetStatus),
+		rest.Get("/cache/:key", GetCache),
+		rest.Put("/cache/:key", PutCache),
 	)
 
 	api.SetApp(router)
